@@ -15,21 +15,21 @@ type Pair struct {
 	Remove string `json:"remove"`
 }
 
-type LWWSet struct {
+type LWWESet struct {
 	Type     string           `json:"type"`
 	Bias     string           `json:"bias"`
 	Data     map[string]*Pair `json:"-"`
 	JSONData [][3]string      `json:"e"`
 }
 
-func NewLWWSet(bias string) (lwwset *LWWSet, err error) {
+func NewLWWESet(bias string) (lwwset *LWWESet, err error) {
 	if bias != "a" && bias != "r" {
 		err = ErrInvalidBias
 	}
 
 	data := make(map[string]*Pair)
 
-	lwwset = &LWWSet{
+	lwwset = &LWWESet{
 		Type: "lww-e-set",
 		Bias: bias,
 		Data: data,
@@ -37,7 +37,7 @@ func NewLWWSet(bias string) (lwwset *LWWSet, err error) {
 	return
 }
 
-func (lwwset *LWWSet) Add(value string) (err error) {
+func (lwwset *LWWESet) Add(value string) (err error) {
 	data := lwwset.Data
 
 	if pair, ok := lwwset.Data[value]; ok {
@@ -51,7 +51,7 @@ func (lwwset *LWWSet) Add(value string) (err error) {
 	return
 }
 
-func (lwwset *LWWSet) Remove(value string) (err error) {
+func (lwwset *LWWESet) Remove(value string) (err error) {
 	data := lwwset.Data
 
 	if pair, ok := lwwset.Data[value]; ok {
@@ -65,7 +65,7 @@ func (lwwset *LWWSet) Remove(value string) (err error) {
 	return
 }
 
-func (lwwset *LWWSet) Test(value string) (is_member bool, err error) {
+func (lwwset *LWWESet) Test(value string) (is_member bool, err error) {
 	if pair, ok := lwwset.Data[value]; ok {
 		if remove := pair.Remove; remove != "" {
 			remove_time, err := time.Parse(time.RFC3339, pair.Remove)
@@ -104,12 +104,12 @@ func (lwwset *LWWSet) Test(value string) (is_member bool, err error) {
 	return is_member, nil
 }
 
-func (lwwset *LWWSet) ToSet() (keys []string, err error) {
+func (lwwset *LWWESet) ToSet() (keys []string, err error) {
 	return
 }
 
-func (lwwset *LWWSet) Clone() (clone *LWWSet, err error) {
-	clone = &LWWSet{
+func (lwwset *LWWESet) Clone() (clone *LWWESet, err error) {
+	clone = &LWWESet{
 		Type: lwwset.Type,
 		Bias: lwwset.Bias,
 		Data: lwwset.Data,
@@ -117,7 +117,7 @@ func (lwwset *LWWSet) Clone() (clone *LWWSet, err error) {
 	return
 }
 
-func (lwwset *LWWSet) Merge(olwwset *LWWSet) (merged_set *LWWSet, err error) {
+func (lwwset *LWWESet) Merge(olwwset *LWWESet) (merged_set *LWWESet, err error) {
 	merged_set, err = lwwset.Clone()
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func (lwwset *LWWSet) Merge(olwwset *LWWSet) (merged_set *LWWSet, err error) {
 	return
 }
 
-func (lwwset *LWWSet) JSON() (json_bytes []byte, err error) {
+func (lwwset *LWWESet) JSON() (json_bytes []byte, err error) {
 	for k, v := range lwwset.Data {
 		inner := [3]string{k, v.Add, v.Remove}
 		lwwset.JSONData = append(lwwset.JSONData, inner)
