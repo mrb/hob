@@ -27,6 +27,7 @@ func setupLWWESetWithData(t *testing.T) (lwwset *hob.LWWESet) {
 
 	err = lwwset.Remove("Key1")
 	assert.T(t, err == nil)
+
 	err = lwwset.Add("Key2")
 	assert.T(t, err == nil)
 
@@ -35,25 +36,66 @@ func setupLWWESetWithData(t *testing.T) (lwwset *hob.LWWESet) {
 
 /*
 - Bias: "a" / "r"
-* e added, not removed - true / true
-* e added, removed, removed > added - false / false
-* e added, removed, removed = added - true / false
-* e added, removed, added again - true / true
 */
 func TestLWWESetBias(t *testing.T) {
 	lwwset := setupLWWESetWithData(t)
+	assert.T(t, lwwset.Bias == "a")
 
+	rlwwset := setupLWWESetWithData(t)
+	rlwwset.Bias = "r"
+	assert.T(t, rlwwset.Bias == "r")
+
+	// e added, not removed - true / true
 	is_member, err := lwwset.Test("Key2")
 	assert.T(t, err == nil)
 	assert.T(t, is_member == true)
 
-	is_member, err = lwwset.Test("NOOOOOOO")
+	is_member, err = rlwwset.Test("Key2")
+	assert.T(t, err == nil)
+	assert.T(t, is_member == true)
+
+	// e added, removed, removed > added - false / false
+	is_member, err = lwwset.Test("Key1")
 	assert.T(t, err == nil)
 	assert.T(t, is_member == false)
 
-	err = lwwset.Remove("Key1")
+	is_member, err = rlwwset.Test("Key1")
 	assert.T(t, err == nil)
 	assert.T(t, is_member == false)
+
+	// e added, removed, added -- added = removed - true / false
+	err = lwwset.Add("Key1")
+	assert.T(t, err == nil)
+	lwwset.Data["Key1"].Add = lwwset.Data["Key1"].Remove
+	assert.T(t, lwwset.Data["Key1"].Add == lwwset.Data["Key1"].Remove)
+
+	is_member, err = lwwset.Test("Key1")
+	assert.T(t, err == nil)
+	assert.T(t, is_member == true)
+
+	err = rlwwset.Add("Key1")
+	assert.T(t, err == nil)
+	rlwwset.Data["Key1"].Add = rlwwset.Data["Key1"].Remove
+	assert.T(t, rlwwset.Data["Key1"].Add == rlwwset.Data["Key1"].Remove)
+
+	is_member, err = rlwwset.Test("Key1")
+	assert.T(t, err == nil)
+	assert.T(t, is_member == false)
+
+	// e added, removed, added again - true / true
+	err = lwwset.Add("Key1")
+	assert.T(t, err == nil)
+
+	is_member, err = lwwset.Test("Key1")
+	assert.T(t, err == nil)
+	assert.T(t, is_member == true)
+
+	err = rlwwset.Add("Key1")
+	assert.T(t, err == nil)
+
+	is_member, err = rlwwset.Test("Key1")
+	assert.T(t, err == nil)
+	assert.T(t, is_member == true)
 }
 
 func TestLWWJson(t *testing.T) {
