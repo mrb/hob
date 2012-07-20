@@ -1,6 +1,6 @@
 ## Hob: CRDT For Go
 
-Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/55/55/88/PDF/techreport.pdf">A comprehensive study of Convergent and Commutative Replicated Data Types</a>
+Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/55/55/88/PDF/techreport.pdf">A comprehensive study of Convergent and Commutative Replicated Data Types</a> Very alpha!
 
 ### Examples
 
@@ -35,6 +35,8 @@ A few Open Source implementations of these data structures exist. Hob conforms t
 * Kyle Kingsbury *Meangirls* (<a href="https://github.com/aphyr/meangirls">Ruby Implementation - Github Repo</a>)
 
 ### TODO
+
+A lot! This library lacks a lot at the moment, including JSON decoding. I'm trying to figure out the best idiomatic Go way to handle parsing multiple data types with the same code.
 
 ### Tests
 
