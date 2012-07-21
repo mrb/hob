@@ -1,20 +1,41 @@
 ## Hob: CRDT For Go
 
-Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/55/55/88/PDF/techreport.pdf">A comprehensive study of Convergent and Commutative Replicated Data Types</a> Very alpha!
+Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/55/55/88/PDF/techreport.pdf">A comprehensive study of Convergent and Commutative Replicated Data Types</a>
+
+#### This is pre-release, experimental software
 
 ### Examples
+
+#### Two-Phase-Set
+
+```go
+two_phase_set, _ := hob.NewTwoPhaseSet()
+two_phase_set.Add("I'm in the add set")
+two_phase_set.Remove("I'm in the add set") // and in the remove set
+json, _ := two_phase_set.JSON()
+```
+
+Produces:
+
+```json
+{
+  "type":"2p-set",
+  "a": ["Key1","Key2"],
+  "r": ["Key1"]
+}
+```
 
 #### LWW-element-Set
 
 ```go
-lwwset, err := hob.NewLWWSet("a")
+lwwset, _ := hob.NewLWWSet("a")
 lwwset.Add("Dude!")
 lwwset.Remove("Dude!")
 lwwset.Add("Other key")
 json, _ := lwwset.JSON()
 ```
 
-Produces JSON:
+Produces:
 
 ```json
 {
@@ -26,6 +47,7 @@ Produces JSON:
   ]
 }
 ```
+
 
 ### Prior Art
 
