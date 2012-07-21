@@ -11,6 +11,7 @@ Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/
 ```go
 two_phase_set, _ := hob.NewTwoPhaseSet()
 two_phase_set.Add("I'm in the add set")
+two_phase_set.Add("I'm also in the add set")
 two_phase_set.Remove("I'm in the add set") // and in the remove set
 json, _ := two_phase_set.JSON()
 ```
@@ -20,8 +21,8 @@ Produces:
 ```json
 {
   "type":"2p-set",
-  "a": ["Key1","Key2"],
-  "r": ["Key1"]
+  "a": ["I'm in the add set","I'm also in the add set"],
+  "r": ["I'm in the add set"]
 }
 ```
 

@@ -2,8 +2,6 @@ package hob
 
 import (
 	"encoding/json"
-
-//"errors"
 )
 
 type TwoPhaseSet struct {
@@ -14,11 +12,11 @@ type TwoPhaseSet struct {
 	JSONR []string          `json:"r"`
 }
 
-func NewTwoPhaseSet() (two_phase_set *TwoPhaseSet, err error) {
+func NewTwoPhaseSet() (twoPhaseSet *TwoPhaseSet, err error) {
 	add := make(map[string]string)
 	remove := make(map[string]string)
 
-	two_phase_set = &TwoPhaseSet{
+	twoPhaseSet = &TwoPhaseSet{
 		Type: "2p-set",
 		A:    add,
 		R:    remove,
@@ -26,42 +24,51 @@ func NewTwoPhaseSet() (two_phase_set *TwoPhaseSet, err error) {
 	return
 }
 
-func (two_phase_set *TwoPhaseSet) Add(value string) (err error) {
-	two_phase_set.A[value] = ""
+func (twoPhaseSet *TwoPhaseSet) Add(value string) (err error) {
+	twoPhaseSet.A[value] = ""
 	return
 }
 
-func (two_phase_set *TwoPhaseSet) Remove(value string) (err error) {
-	two_phase_set.R[value] = ""
+func (twoPhaseSet *TwoPhaseSet) Remove(value string) (err error) {
+	twoPhaseSet.R[value] = ""
 	return
 }
 
-func (two_phase_set *TwoPhaseSet) Test(value string) (is_member bool, err error) {
-	return
-}
-
-func (two_phase_set *TwoPhaseSet) JSON() (json_bytes []byte, err error) {
-	for k, _ := range two_phase_set.A {
-		two_phase_set.JSONA = append(two_phase_set.JSONA, k)
+func (twoPhaseSet *TwoPhaseSet) Test(value string) (is_member bool, err error) {
+	if _, ok := twoPhaseSet.R[value]; ok {
+		is_member = false
+		return
 	}
 
-	for k, _ := range two_phase_set.R {
-		two_phase_set.JSONR = append(two_phase_set.JSONR, k)
+	if _, ok := twoPhaseSet.A[value]; ok {
+		is_member = true
+		return
 	}
-
-	json_bytes, err = json.Marshal(two_phase_set)
 	return
 }
 
-func (two_phase_set *TwoPhaseSet) Clone() (clone *TwoPhaseSet, err error) {
+func (twoPhaseSet *TwoPhaseSet) JSON() (json_bytes []byte, err error) {
+	for k, _ := range twoPhaseSet.A {
+		twoPhaseSet.JSONA = append(twoPhaseSet.JSONA, k)
+	}
+
+	for k, _ := range twoPhaseSet.R {
+		twoPhaseSet.JSONR = append(twoPhaseSet.JSONR, k)
+	}
+
+	json_bytes, err = json.Marshal(twoPhaseSet)
+	return
+}
+
+func (twoPhaseSet *TwoPhaseSet) Clone() (clone *TwoPhaseSet, err error) {
 	clone = &TwoPhaseSet{
-		Type: two_phase_set.Type,
-		A:    two_phase_set.A,
-		R:    two_phase_set.R,
+		Type: twoPhaseSet.Type,
+		A:    twoPhaseSet.A,
+		R:    twoPhaseSet.R,
 	}
 	return
 }
 
-func (two_phase_set *TwoPhaseSet) Merge(otwo_phase_set *TwoPhaseSet) (merged_set *TwoPhaseSet, err error) {
+func (twoPhaseSet *TwoPhaseSet) Merge(oTwoPhaseSet *TwoPhaseSet) (merged_set *TwoPhaseSet, err error) {
 	return
 }
