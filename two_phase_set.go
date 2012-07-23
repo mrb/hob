@@ -5,16 +5,16 @@ import (
 )
 
 type TwoPhaseSet struct {
-	Type  string            `json:"type"`
-	A     map[string]string `json:"-"`
-	R     map[string]string `json:"-"`
-	JSONA []string          `json:"a"`
-	JSONR []string          `json:"r"`
+	Type  string          `json:"type"`
+	A     map[string]bool `json:"-"`
+	R     map[string]bool `json:"-"`
+	JSONA []string        `json:"a"`
+	JSONR []string        `json:"r"`
 }
 
 func NewTwoPhaseSet() (twoPhaseSet *TwoPhaseSet, err error) {
-	add := make(map[string]string)
-	remove := make(map[string]string)
+	add := make(map[string]bool)
+	remove := make(map[string]bool)
 
 	twoPhaseSet = &TwoPhaseSet{
 		Type: "2p-set",
@@ -25,12 +25,12 @@ func NewTwoPhaseSet() (twoPhaseSet *TwoPhaseSet, err error) {
 }
 
 func (twoPhaseSet *TwoPhaseSet) Add(value string) (err error) {
-	twoPhaseSet.A[value] = ""
+	twoPhaseSet.A[value] = true
 	return
 }
 
 func (twoPhaseSet *TwoPhaseSet) Remove(value string) (err error) {
-	twoPhaseSet.R[value] = ""
+	twoPhaseSet.R[value] = true
 	return
 }
 
@@ -70,5 +70,16 @@ func (twoPhaseSet *TwoPhaseSet) Clone() (clone *TwoPhaseSet, err error) {
 }
 
 func (twoPhaseSet *TwoPhaseSet) Merge(oTwoPhaseSet *TwoPhaseSet) (merged_set *TwoPhaseSet, err error) {
+	clone, err := twoPhaseSet.Clone()
+	if err != nil {
+		return nil, err
+	}
+
+	merged_set = clone
+
 	return
+}
+
+func (sbmap Map) Union() {
+
 }
