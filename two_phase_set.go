@@ -79,7 +79,3 @@ func (twoPhaseSet *TwoPhaseSet) Merge(oTwoPhaseSet *TwoPhaseSet) (merged_set *Tw
 
 	return
 }
-
-func (sbmap Map) Union() {
-
-}
