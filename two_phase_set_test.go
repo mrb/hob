@@ -42,4 +42,5 @@ func TestTwoPhaseSetTest(t *testing.T) {
 	is_member, err = twoPhaseSet.Test("Key2")
 	assert.T(t, err == nil)
 	assert.T(t, is_member == true)
+
 }
