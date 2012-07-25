@@ -62,17 +62,19 @@ func (set *Set) Union(oset *Set) (union *Set) {
 func (set *Set) Intersection(oset *Set) (intersection *Set) {
 	intersection = NewSet()
 
+	var shorterSet, longerSet *Set
+
 	if len(set.setData) > len(oset.setData) {
-		for value, _ := range oset.setData {
-			if ok := set.setData[value]; ok {
-				intersection.setData[value] = true
-			}
-		}
+		shorterSet = oset
+		longerSet = set
 	} else {
-		for value, _ := range set.setData {
-			if ok := oset.setData[value]; ok {
-				intersection.setData[value] = true
-			}
+		shorterSet = set
+		longerSet = oset
+	}
+
+	for value, _ := range shorterSet.setData {
+		if ok := longerSet.setData[value]; ok {
+			intersection.setData[value] = true
 		}
 	}
 
