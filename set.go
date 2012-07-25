@@ -1,35 +1,92 @@
-/*
-This is extremely naive but it's my first shot at playing with extending
-types in Go. What I actually want is a data structure that wraps the
-map[string]bool type, and adds Add, Remove, and Test methods, in addition
-to Union, Intersection, etc. There should be an easy, cached interface to
-an array of strings which would represent the actual "set" of data, since
-the map of string:bool is a hack.
-*/
 package hob
 
 import ()
 
-type Set map[string]bool
+type SetData map[string]bool
 
-func NewSet() (set Set) {
-	set = make(Set)
+type Set struct {
+	setData SetData
+	Set     []string
+}
+
+func NewSet() (set *Set) {
+	return &Set{
+		setData: newSetData(),
+		Set:     newSetSlice(),
+	}
+}
+
+func newSetData() (setData SetData) {
+	setData = make(SetData)
 	return
 }
 
-func (set Set) Add(value string) (ok bool) {
-	set[value] = true
+func newSetSlice() (setSlice []string) {
+	setSlice = make([]string, 0)
+	return
+}
+
+func (set *Set) Add(value string) (ok bool) {
+	set.setData[value] = true
 	ok = true
 	return
 }
 
-func (set Set) Remove(value string) (ok bool) {
-	set[value] = false
+func (set *Set) Remove(value string) (ok bool) {
+	delete(set.setData, value)
 	ok = true
 	return
 }
 
-func (set Set) Test(value string) (ok bool) {
-	ok = set[value]
+func (set *Set) Test(value string) (ok bool) {
+	ok = set.setData[value]
 	return
+}
+
+func (set *Set) Clone() (clone *Set) {
+	clone = &Set{
+		setData: set.setData,
+		Set:     set.Set,
+	}
+	return
+}
+
+func (set *Set) Union(oset *Set) (union *Set) {
+	union = set.Clone()
+	for value, _ := range oset.setData {
+		union.setData[value] = true
+	}
+	return
+}
+
+func (set *Set) Intersection(oset *Set) (intersection *Set) {
+	intersection = NewSet()
+
+	if len(set.setData) > len(oset.setData) {
+		for value, _ := range oset.setData {
+			if ok := set.setData[value]; ok {
+				intersection.setData[value] = true
+			}
+		}
+	} else {
+		for value, _ := range set.setData {
+			if ok := oset.setData[value]; ok {
+				intersection.setData[value] = true
+			}
+		}
+	}
+
+	return
+}
+
+func (set *Set) Slice() []string {
+	set.Set = newSetSlice()
+
+	for value, ok := range set.setData {
+		if ok {
+			set.Set = append(set.Set, value)
+		}
+	}
+
+	return set.Set
 }
