@@ -1,3 +1,4 @@
 language: go
+script: go get github.com/bmizerany/assert && go test
 notifications:
   email: false
