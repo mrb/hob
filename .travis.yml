@@ -1,4 +1,4 @@
 language: go
-script: go get github.com/bmizerany/assert && go test
+script: go get github.com/bmizerany/assert && go get github.com/mrb/hob && go test
 notifications:
   email: false
