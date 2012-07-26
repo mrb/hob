@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/mrb/hob.png?branch=master)](http://travis-ci.org/mrb/hob)
+
 ## Hob: CRDT For Go
 
 Go implementations of data structures from <a href="http://hal.inria.fr/docs/00/55/55/88/PDF/techreport.pdf">A comprehensive study of Convergent and Commutative Replicated Data Types</a>
